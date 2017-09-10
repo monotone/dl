@@ -167,6 +167,9 @@ func makeTrampoline(typ reflect.Type, handle unsafe.Pointer) (rFunc, error) {
 				v = reflect.ValueOf(uintptr(ret))
 			case reflect.UnsafePointer:
 				v = reflect.ValueOf(ret)
+			case reflect.Bool:
+				// 因为C里的bool类型实质是一个unsinged char,即uint8,所以这里用这种方式转换
+				v = reflect.ValueOf(uint8(uintptr(ret)) != 0)
 			default:
 				panic(fmt.Errorf("can't retrieve value of type %s", out))
 			}
